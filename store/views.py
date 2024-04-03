@@ -4,11 +4,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
-from .models import Product, Collection, OrderItem, Review, Cart, CartItem
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
+from .models import Customer, Product, Collection, OrderItem, Review, Cart, CartItem
 from rest_framework import status
 from django.db.models import Count
-from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
+from .serializers import CustomerSerializer, ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from .filters import ProductFilterSet
@@ -72,23 +72,22 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
 
 class CartItemViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post','patch' ,'delete'] 
-     
+
     def get_serializer_class(self):
-        
+
         if self.request.method == 'POST':
             return AddCartItemSerializer
-        
+
         elif self.request.method == 'PATCH':
             return UpdateCartItemSerializer    
-        
+
         return CartItemSerializer
-        
+
     def get_serializer_context(self):
-         return {'cart_id':self.kwargs['cart_pk']}
-    
+        return {'cart_id':self.kwargs['cart_pk']}
+
     def get_queryset(self):
         return CartItem.objects.filter(cart_id= self.kwargs['cart_pk']).select_related('product') 
-    
 
 
 #     queryset = CartItem.objects.all()
@@ -99,6 +98,12 @@ class CartItemViewSet(viewsets.ModelViewSet):
 #         obj = get_object_or_404(CartItem, pk=pk)
 #         return obj
 
-class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin):
+
+class CustomerViewSet(
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer        
+    serializer_class = CustomerSerializer

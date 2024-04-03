@@ -5,6 +5,7 @@ from rest_framework_nested import routers
 router = routers.DefaultRouter()
 router.register('products', views.ProductViewSet, basename='products')
 router.register('collections', views.CollectionViewSet)
+router.register(r"customers", views.CustomerViewSet)
 router.register('carts', views.CartViewSet)
 # router.register('cart_item/<id>', views.CartItemViewSet)
 # urlpatterns = router.urls
