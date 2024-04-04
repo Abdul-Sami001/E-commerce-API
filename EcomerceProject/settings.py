@@ -156,6 +156,8 @@ AUTH_USER_MODEL = 'store_custom.User'
 
 DJOSER = {
     'SERIALIZERS' : {
-        'user_create' : 'store_custom.serializers.UserCreateSerializer'
+        'user_create' : 'store_custom.serializers.UserCreateSerializer',
+        'current_user' : 'store_custom.serializers.UserSerializer'
+        
     }
 }
